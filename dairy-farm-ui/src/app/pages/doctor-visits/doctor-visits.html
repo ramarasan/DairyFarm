@@ -1,0 +1,42 @@
+<h2>Doctor Visits</h2>
+
+    <div class="panel">
+      <h3>Add visit</h3>
+      <div class="form-grid">
+        <label>Cow *
+          <select [(ngModel)]="form.cowId">
+            <option [ngValue]="null">-- select cow --</option>
+            @for (c of cows(); track c.cowId) { <option [ngValue]="c.cowId">{{ c.tagNumber }} {{ c.name }}</option> }
+          </select>
+        </label>
+        <label>Visit date *<input type="date" [(ngModel)]="form.visitDate" /></label>
+        <label>Doctor name *<input [(ngModel)]="form.doctorName" /></label>
+        <label>Disease / problem<input [(ngModel)]="form.disease" /></label>
+        <label>Treatment / medicine<input [(ngModel)]="form.treatment" /></label>
+        <label>Cost<input type="number" [(ngModel)]="form.cost" /></label>
+        <label>Next visit date<input type="date" [(ngModel)]="form.nextVisitDate" /></label>
+      </div>
+      @if (msg()) { <div [class]="ok() ? 'ok' : 'error'">{{ msg() }}</div> }
+      <div class="actions">
+        <button class="btn" (click)="save()" [disabled]="!form.cowId || !form.doctorName || !form.visitDate">Save visit</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Visit history</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Cow</th><th>Doctor</th><th>Disease</th><th>Treatment</th><th>Cost</th><th>Next visit</th><th></th></tr></thead>
+          <tbody>
+            @for (v of visits(); track v.visitId) {
+              <tr>
+                <td>{{ v.visitDate | date:'dd MMM yyyy' }}</td><td>{{ v.tagNumber }}</td><td>{{ v.doctorName }}</td>
+                <td>{{ v.disease }}</td><td>{{ v.treatment }}</td><td>{{ v.cost }}</td>
+                <td>{{ v.nextVisitDate | date:'dd MMM yyyy' }}</td>
+                <td>@if (auth.isAdmin) { <button class="btn small danger" (click)="remove(v)">Delete</button> }</td>
+              </tr>
+            } @empty { <tr><td colspan="8" class="muted">No visits recorded</td></tr> }
+          </tbody>
+        </table>
+      </div>
+    </div>

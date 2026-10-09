@@ -1,0 +1,54 @@
+<h2>Loading / Unloading</h2>
+
+    <div class="panel">
+      <h3>New entry</h3>
+      <div class="form-grid">
+        <label>Type *
+          <select [(ngModel)]="form.direction">
+            <option value="Unload">Unload (stock coming in)</option>
+            <option value="Load">Load (goods going out)</option>
+          </select>
+        </label>
+        <label>Item *
+          <select [(ngModel)]="form.itemId">
+            <option [ngValue]="null">-- select item --</option>
+            @for (s of items(); track s.itemId) {
+              <option [ngValue]="s.itemId">{{ s.itemName }} ({{ s.currentQty | number:'1.0-2' }} {{ s.unit }})</option>
+            }
+          </select>
+        </label>
+        <label>Quantity *<input type="number" min="0" step="0.1" [(ngModel)]="form.quantity" /></label>
+        <label>Vehicle no<input [(ngModel)]="form.vehicleNo" /></label>
+        <label>Party (supplier / customer)<input [(ngModel)]="form.partyName" /></label>
+        <label>Remarks<input [(ngModel)]="form.remarks" /></label>
+      </div>
+      @if (msg()) { <div [class]="ok() ? 'ok' : 'error'">{{ msg() }}</div> }
+      <div class="actions">
+        <button class="btn" (click)="save()" [disabled]="!form.itemId || !form.quantity">Save</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="toolbar">
+        <h3>History</h3>
+        <select [(ngModel)]="filter" (ngModelChange)="load()">
+          <option value="">All</option><option value="Load">Load</option><option value="Unload">Unload</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date & time</th><th>Type</th><th>Item</th><th>Qty</th><th>Vehicle</th><th>Party</th><th>Remarks</th><th></th></tr></thead>
+          <tbody>
+            @for (t of list(); track t.txnId) {
+              <tr>
+                <td>{{ t.txnDate | date:'dd MMM yyyy HH:mm' }}</td>
+                <td><span class="tag" [class.new]="t.direction === 'Unload'">{{ t.direction }}</span></td>
+                <td>{{ t.itemName }}</td><td>{{ t.quantity | number:'1.0-2' }} {{ t.unit }}</td>
+                <td>{{ t.vehicleNo }}</td><td>{{ t.partyName }}</td><td>{{ t.remarks }}</td>
+                <td>@if (auth.isAdmin) { <button class="btn small danger" (click)="remove(t)">Delete</button> }</td>
+              </tr>
+            } @empty { <tr><td colspan="8" class="muted">No entries</td></tr> }
+          </tbody>
+        </table>
+      </div>
+    </div>

@@ -1,0 +1,31 @@
+<h2>Dashboard</h2>
+@if (data(); as d) {
+      <div class="cards">
+        <div class="stat"><span>Total cows</span><b>{{ d.totalCows }}</b></div>
+        <div class="stat"><span>New cows</span><b>{{ d.newCows }}</b></div>
+        <div class="stat"><span>Old cows</span><b>{{ d.oldCows }}</b></div>
+        <div class="stat good"><span>Today's milk (L)</span><b>{{ d.todayMilkLitres | number:'1.0-1' }}</b></div>
+        <div class="stat"><span>Yesterday's milk (L)</span><b>{{ d.yesterdayMilkLitres | number:'1.0-1' }}</b></div>
+        <div class="stat" [class.warn]="d.visitsDueThisWeek > 0"><span>Doctor visits due (7 days)</span><b>{{ d.visitsDueThisWeek }}</b></div>
+        <div class="stat" [class.warn]="d.lowStockItems > 0"><span>Low stock items</span><b>{{ d.lowStockItems }}</b></div>
+        <div class="stat"><span>Loaded today</span><b>{{ d.todayLoaded | number:'1.0-1' }}</b></div>
+        <div class="stat"><span>Unloaded today</span><b>{{ d.todayUnloaded | number:'1.0-1' }}</b></div>
+      </div>
+    } @else {
+      <p class="muted">Loading...</p>
+    }
+
+    <div class="panel">
+      <h3>Milk production - last 7 days (litres)</h3>
+      <div class="bars">
+        @for (x of days(); track x.date) {
+          <div class="bar-col">
+            <small>{{ x.litres | number:'1.0-1' }}</small>
+            <div class="bar" [style.height.%]="(x.litres / max()) * 80"></div>
+            <small>{{ x.date | date:'dd MMM' }}</small>
+          </div>
+        } @empty {
+          <p class="muted">No milk records yet. Add some in Milk Entry.</p>
+        }
+      </div>
+    </div>

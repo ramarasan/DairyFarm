@@ -1,0 +1,22 @@
+<div class="shell">
+      <aside class="side">
+        <div class="brand">🐄 Dairy Farm</div>
+        <nav>
+          <a routerLink="/dashboard" routerLinkActive="active">📊 Dashboard</a>
+          <a routerLink="/cows" routerLinkActive="active">🐄 Cows</a>
+          <a routerLink="/milk-entry" routerLinkActive="active">🥛 Milk Entry</a>
+          <a routerLink="/doctor-visits" routerLinkActive="active">🩺 Doctor Visits</a>
+          <a routerLink="/load-unload" routerLinkActive="active">🚚 Load / Unload</a>
+          <a routerLink="/stock" routerLinkActive="active">📦 Stock</a>
+          @if (auth.isAdmin) {
+            <a routerLink="/users" routerLinkActive="active">👤 Users</a>
+          }
+        </nav>
+        <div class="who">
+          <div>{{ auth.fullName }}</div>
+          <small>{{ auth.role }}</small>
+          <button class="btn danger" (click)="logout()">Logout</button>
+        </div>
+      </aside>
+      <main class="content"><router-outlet /></main>
+    </div>

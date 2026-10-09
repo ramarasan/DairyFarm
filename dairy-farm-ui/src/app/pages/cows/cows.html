@@ -1,0 +1,64 @@
+<h2>Cows</h2>
+
+    <div class="panel">
+      <h3>{{ editId ? 'Edit cow' : 'Add new cow' }}</h3>
+      <div class="form-grid">
+        <label>Tag number *<input [(ngModel)]="form.tagNumber" /></label>
+        <label>Name<input [(ngModel)]="form.name" /></label>
+        <label>Breed<input [(ngModel)]="form.breed" placeholder="Jersey, HF, Gir..." /></label>
+        <label>Type
+          <select [(ngModel)]="form.cowType">
+            <option value="New">New cow</option>
+            <option value="Old">Old cow</option>
+          </select>
+        </label>
+        <label>Date of birth<input type="date" [(ngModel)]="form.dateOfBirth" /></label>
+        <label>Purchase date<input type="date" [(ngModel)]="form.purchaseDate" /></label>
+        <label>Purchase price<input type="number" [(ngModel)]="form.purchasePrice" /></label>
+        @if (editId) {
+          <label>Status
+            <select [(ngModel)]="form.status">
+              <option>Active</option><option>Sold</option><option>Dead</option>
+            </select>
+          </label>
+        }
+      </div>
+      @if (msg()) { <div [class]="ok() ? 'ok' : 'error'">{{ msg() }}</div> }
+      <div class="actions">
+        <button class="btn" (click)="save()" [disabled]="!form.tagNumber">{{ editId ? 'Update' : 'Save' }}</button>
+        @if (editId) { <button class="btn ghost" (click)="reset()">Cancel</button> }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="toolbar">
+        <h3>Cow list ({{ cows().length }})</h3>
+        <select [(ngModel)]="filter" (ngModelChange)="load()">
+          <option value="">All</option>
+          <option value="New">New cows</option>
+          <option value="Old">Old cows</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tag</th><th>Name</th><th>Breed</th><th>Type</th><th>Purchase date</th><th>Price</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            @for (c of cows(); track c.cowId) {
+              <tr>
+                <td>{{ c.tagNumber }}</td><td>{{ c.name }}</td><td>{{ c.breed }}</td>
+                <td><span class="tag" [class.new]="c.cowType === 'New'">{{ c.cowType }}</span></td>
+                <td>{{ c.purchaseDate | date:'dd MMM yyyy' }}</td>
+                <td>{{ c.purchasePrice }}</td>
+                <td>{{ c.status }}</td>
+                <td class="row-actions">
+                  @if (auth.isAdmin) {
+                    <button class="btn small" (click)="edit(c)">Edit</button>
+                    <button class="btn small danger" (click)="remove(c)">Delete</button>
+                  }
+                </td>
+              </tr>
+            } @empty { <tr><td colspan="8" class="muted">No cows found</td></tr> }
+          </tbody>
+        </table>
+      </div>
+    </div>

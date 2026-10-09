@@ -1,0 +1,16 @@
+<div class="login-wrap">
+  <div class="card">
+    <h2>🐄 Dairy Farm</h2>
+    <p>Sign in to continue</p>
+
+    <input type="text" placeholder="Username" (input)="clearError()" [(ngModel)]="username" name="username" />
+    <input type="password" placeholder="Password" (input)="clearError()" [(ngModel)]="password" name="password"
+           (keyup.enter)="onLogin()" />
+
+    @if (error) { <div class="error">{{ error }}</div> }
+
+    <button (click)="onLogin()" [disabled]="loading || !username || !password">
+      {{ loading ? 'Signing in...' : 'Login' }}
+    </button>
+  </div>
+</div>

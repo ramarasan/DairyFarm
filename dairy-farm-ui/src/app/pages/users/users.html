@@ -1,0 +1,36 @@
+<h2>Users</h2>
+
+    <div class="panel">
+      <h3>Create account</h3>
+      <div class="form-grid">
+        <label>Full name *<input [(ngModel)]="form.fullName" /></label>
+        <label>Username *<input [(ngModel)]="form.username" autocomplete="off" /></label>
+        <label>Password *<input type="password" [(ngModel)]="form.password" autocomplete="new-password" /></label>
+        <label>Role
+          <select [(ngModel)]="form.role"><option value="User">User (data entry)</option><option value="Admin">Admin</option></select>
+        </label>
+      </div>
+      @if (msg()) { <div [class]="ok() ? 'ok' : 'error'">{{ msg() }}</div> }
+      <div class="actions">
+        <button class="btn" (click)="save()" [disabled]="!form.fullName || !form.username || !form.password">Create user</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>All users</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            @for (u of users(); track u.userId) {
+              <tr>
+                <td>{{ u.fullName }}</td><td>{{ u.username }}</td>
+                <td><span class="tag" [class.new]="u.role === 'Admin'">{{ u.role }}</span></td>
+                <td>{{ u.isActive ? 'Active' : 'Disabled' }}</td>
+                <td><button class="btn small" [class.danger]="u.isActive" (click)="toggle(u)">{{ u.isActive ? 'Disable' : 'Enable' }}</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>

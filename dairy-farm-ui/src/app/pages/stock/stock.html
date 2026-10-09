@@ -1,0 +1,39 @@
+<h2>Stock</h2>
+
+    @if (auth.isAdmin) {
+      <div class="panel">
+        <h3>Add stock item</h3>
+        <div class="form-grid">
+          <label>Item name *<input [(ngModel)]="form.itemName" placeholder="Cattle feed, Medicine..." /></label>
+          <label>Unit *
+            <select [(ngModel)]="form.unit">
+              <option>kg</option><option>litre</option><option>bag</option><option>piece</option>
+            </select>
+          </label>
+          <label>Opening quantity<input type="number" [(ngModel)]="form.currentQty" /></label>
+          <label>Reorder level<input type="number" [(ngModel)]="form.reorderLevel" /></label>
+        </div>
+        @if (msg()) { <div [class]="ok() ? 'ok' : 'error'">{{ msg() }}</div> }
+        <div class="actions"><button class="btn" (click)="save()" [disabled]="!form.itemName">Add item</button></div>
+      </div>
+    }
+
+    <div class="panel">
+      <h3>Current stock</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Quantity</th><th>Unit</th><th>Reorder level</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            @for (s of items(); track s.itemId) {
+              <tr [class.low]="s.isLow">
+                <td>{{ s.itemName }}</td><td>{{ s.currentQty | number:'1.0-2' }}</td><td>{{ s.unit }}</td>
+                <td>{{ s.reorderLevel | number:'1.0-2' }}</td>
+                <td>{{ s.isLow ? 'LOW STOCK' : 'OK' }}</td>
+                <td>@if (auth.isAdmin) { <button class="btn small danger" (click)="remove(s)">Delete</button> }</td>
+              </tr>
+            } @empty { <tr><td colspan="6" class="muted">No stock items</td></tr> }
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Quantities change through Load / Unload entries.</p>
+    </div>
